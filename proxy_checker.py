@@ -39,6 +39,21 @@ class ProxyChecker:
         data: dict = requests.get(url=f"{self.api}proxies/{proxy_name}", headers=self.auth_headers).json()
         return data
 
+    def get_proxy_delay(self, proxy_name: str) -> int | str:
+        """
+        Returns proxy delay.
+
+        :param proxy_name: proxy name.
+        :return: proxy delay in milliseconds or timeout message.
+        """
+        data: dict = requests.get(
+            url=f"{self.api}proxies/{proxy_name}/delay",
+            params={"url": "http://www.gstatic.com/generate_204", "timeout": self.timeout},
+            headers=self.auth_headers
+        ).json()
+
+        return data.get("delay") or data["message"]
+
     def _validate_proxy(self, proxy_name: str) -> bool:
         """
         Validates that the proxy is not a proxy group.
