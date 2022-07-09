@@ -19,6 +19,16 @@ class ProxyChecker:
             "Authorization": f"Bearer {secret}"
         }
 
+    def get_proxies(self) -> list[str]:
+        """
+        Returns a list of proxy names.
+        """
+        data: dict = requests.get(url=f"{self.api}proxies", headers=self.auth_headers).json()
+        proxies: list[str] = data["proxies"]["GLOBAL"]["all"]
+        # 'proxies' contains both proxies and proxy groups.
+        # So we need to validate them and only return proxies.
+        return list(filter(self._validate_proxy, proxies))
+
     def get_proxy_details(self, proxy_name: str) -> dict:
         """
         Returns proxy details.
