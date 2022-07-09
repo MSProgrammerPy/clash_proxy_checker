@@ -1,4 +1,7 @@
+from colorama import init, Fore
 import requests
+
+init()
 
 
 class ProxyChecker:
@@ -18,6 +21,22 @@ class ProxyChecker:
         self.auth_headers: dict = {
             "Authorization": f"Bearer {secret}"
         }
+
+        self.exec()
+
+    def exec(self):
+        for proxy in self.get_proxies():
+            delay: int | str = self.get_proxy_delay(proxy_name=proxy)
+            if type(delay) == int:
+                if delay < 500:
+                    color = Fore.GREEN
+                elif delay < 900:
+                    color = Fore.YELLOW
+                else:
+                    color = Fore.RED
+            else:
+                color = Fore.RED
+            print(f"{proxy}\t{color}{delay}{Fore.RESET}")
 
     def get_proxies(self) -> list[str]:
         """
