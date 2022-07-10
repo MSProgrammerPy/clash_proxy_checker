@@ -1,7 +1,21 @@
 from colorama import init, Fore
 import requests
+import yaml
+import os
 
 init()
+
+
+class Config:
+    def __init__(self, config_path: str):
+        if not os.path.exists(config_path):
+            raise FileNotFoundError(f"{config_path} not found.")
+        if not os.path.isfile(config_path):
+            raise FileNotFoundError(f"{config_path} is not a file.")
+
+        with open(config_path, encoding="utf-8") as file:
+            config = file.read()
+            self.data: dict = yaml.safe_load(config)
 
 
 class ProxyChecker:
