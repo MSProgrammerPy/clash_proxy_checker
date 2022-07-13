@@ -1,4 +1,5 @@
 from colorama import init, Fore
+from datetime import datetime
 import requests
 import yaml
 import os
@@ -16,6 +17,19 @@ class Config:
         with open(config_path, encoding="utf-8") as file:
             config = file.read()
             self.data: dict = yaml.safe_load(config)
+
+    def fetch_proxy(self, proxy_name: str) -> dict:
+        """
+        Fetches a proxy from configuration file.
+
+        :param proxy_name: proxy name
+        :return: Proxy
+        """
+        proxies: list[dict] = self.data["proxies"]
+        # FIXME: If the proxy with the given name isn't in the configuration file,
+        #  the next function will raise StopIteration.
+        proxy: dict = next(proxy for proxy in proxies if proxy["name"] == proxy_name)
+        return proxy
 
 
 class ProxyChecker:
