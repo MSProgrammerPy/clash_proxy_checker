@@ -38,6 +38,16 @@ class Config:
         proxy: dict = next(proxy for proxy in proxies if proxy["name"] == proxy_name)
         return proxy
 
+    def save(self):
+        """
+        Creates a configuration file and saves healthy proxies to it.
+        """
+        self.data["proxies"] = self.healthy_proxies
+        file_name = str(datetime.now()).replace("-", "_").replace(":", "_").replace(".", "_")
+        with open(f"{file_name}.yml", "w") as file:
+            yaml.safe_dump(self.data, file)
+            print(f"{Fore.GREEN}Healthy proxies saved to {file_name}.yml{Fore.RESET}")
+
 
 class ProxyChecker:
     def __init__(
