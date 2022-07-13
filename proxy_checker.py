@@ -86,6 +86,14 @@ class ProxyChecker:
                 color = Fore.RED
             print(f"{proxy}\t{color}{delay}{Fore.RESET}")
 
+            if type(delay) == int:
+                self.config.add_proxy(proxy_name=proxy)
+
+        # Check if there are healthy proxies, then save the configuration.
+        # If all proxies are timed out, the healthy_proxies attribute is not defined.
+        if hasattr(self.config, "healthy_proxies"):
+            self.config.save()
+
     def get_proxies(self) -> list[str]:
         """
         Returns a list of proxy names.
