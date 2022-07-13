@@ -18,6 +18,13 @@ class Config:
             config = file.read()
             self.data: dict = yaml.safe_load(config)
 
+    def add_proxy(self, proxy_name: str):
+        if not hasattr(self, "healthy_proxies"):
+            self.healthy_proxies: list[dict] = []
+
+        proxy: dict = self.fetch_proxy(proxy_name=proxy_name)
+        self.healthy_proxies.append(proxy)
+
     def fetch_proxy(self, proxy_name: str) -> dict:
         """
         Fetches a proxy from configuration file.
